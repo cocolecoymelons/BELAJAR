@@ -1,4 +1,5 @@
 import random
+from AI_SOLVER_LAST import
 class BOARD:
     def __init__(self):
         self.board = [random.randint(0,10) for _ in range(5)] # Membuat BOARD asli!
