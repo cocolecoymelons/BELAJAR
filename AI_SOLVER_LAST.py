@@ -2,12 +2,19 @@ import random
 class AI_BOARD:
     def __init__(self):
 
-        self.board = [random.randint(0,9) for _ in range(0,5)] # Meminta User menginput board (baik berapa kolom) , membuat board random, dan menentukan apa bisa diselesaikan atau tidak
+        self.board = [] # Meminta User menginput board (baik berapa kolom) , membuat board random, dan menentukan apa bisa diselesaikan atau tidak
 
         self.solutions = []  # nampung semua kombinasi/jalur yang berhasil
         self.failed_combinations = []
     def board_game(self):
         print(" ".join(str(n) for n in self.board)) # Ini memisahkan elemem elemen pada self.board dengan pemisah tertentu
+    def board_combination_generate(self):
+            self.board.clear()
+            self.solutions.clear()
+            self.failed_combinations.clear()
+            for _ in range(0,7):
+                self.board.append(random.randint(0,9))
+            return self.board
 
     def cut_wire_checker(self, board, i): # Meminta fungsi ini memotong kabel sesuai indeks
         if i < 0 or i >= len(board): 
@@ -87,4 +94,4 @@ while run:
         print("This board is not solvable!")
         for idx, sol in enumerate(AISOLVE.failed_combinations, 1):
             print(f"{idx}. {sol}")
-        run = False
+        AISOLVE.board_combination_generate()
