@@ -2,12 +2,13 @@ import random
 class AI_BOARD:
     def __init__(self):
         self.board = [] #[random.randint() for _ in range()] <- if i want to test the AI 
+        self.solutions = []
         self.failed_combinations = []
     def board_combination_generate(self):
         self.board.clear()
         self.solutions.clear()
         self.failed_combinations.clear()
-        for _ in range(0,7):
+        for _ in range(0,10):
             self.board.append(random.randint(0,9))
         return self.board
     def board_game(self):
