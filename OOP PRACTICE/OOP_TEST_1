@@ -1,0 +1,42 @@
+class A:
+    def f(xxx,yyy):
+        print("OKAY")
+        xxx.c = 9004
+        yyy.tool = 9090909
+        print(yyy.tool)
+        return yyy.name
+    def __init__(self,name):
+        self.name = name
+        self.b = 3000
+    def __str__(self):
+        return self.name
+    def __int__(self):
+        return
+a = A("ALICE")
+b = A("DAVID")
+print(a)
+print(b)
+result1 = b.f(a) 
+print(result1)
+result2 = A.f(a,b)
+print(result2)
+print(a,b)
+print(a.name)
+print(A.f(a,b))
+print(type(a.name))
+print(type(A(1232112)))
+print(A("AX"))
+print(a.f)
+print(type(a))
+print(type(type(a)))
+print(type(type(type(a))))
+print(a.c)
+print(a.b)
+a.b = 300
+print(a.b)
+print(a.__dict__)
+print(a.__init__)
+print(type(A.f))
+print(type(result1))
+print(type(a.f))
+print(type(b.f))

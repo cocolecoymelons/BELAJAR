@@ -1,0 +1,93 @@
+import random
+class Player:
+    def __init__(self,name):
+        self.name = name
+        self.health = 1
+        self.level = 1
+        self.heal_cd_value = 0
+    def __str__(self):
+        return self.name
+    
+    def attack(self,target):
+        damage = random.randint(1,10)
+        target.health -= damage
+        return damage
+
+    def heal_cooldown(self):
+        pass
+
+    def heal_cap(self):
+        if self.health >= 100:
+            #print("Heal cap 1")
+            return False
+        elif 0 < self.health < 100:
+            #print("Heal cap 2")
+            return True
+        else:
+            #print("Heal cap 4")
+            return None
+        
+    def heal_validation(self):
+        heal_cap_result = self.heal_cap()
+        if heal_cap_result is None:
+            #print("Error Negative health validation.")
+            return None
+        elif not heal_cap_result:
+            #print("Heal validation 1")
+            return False
+        else:
+            #print("Heal validation 2")
+            return True
+
+        
+    def heal(self):
+        heal_validation_result = self.heal_validation()
+        if heal_validation_result:
+            if self.health + 10 > 100:
+                self.health = 100
+                #print("Heal 1")
+                
+            else:
+                self.health += 10
+                #print("Heal 2")
+                print(f"{Player_1} restores 10 healths")
+            return self.health
+        elif heal_validation_result == None:
+            print("Error Negative health execution")
+        else:
+            print("Your health is full!")
+        return self.health
+    
+    def take_damage(self):
+        pass
+    def show_status(self):
+        pass
+    def level_up(self):
+        pass
+
+#Player_1 = Player(input("P1 NAME "))
+#Player_2 = Player(input("P2 NAME "))
+Player_1 = Player("P1")
+Player_2 = Player("P2")
+
+while True:
+    PlayerTurn = random.choice(['player1','player2'])
+    if PlayerTurn == 'player1':
+        PlayerDecision = input("""
+            Menu:
+            1.Show Status
+            2.Attack
+            3.Heal
+            4.Exit
+        """)
+        if PlayerDecision == '1':
+            print(f"Name: {Player_1}\n" + f"Health: {Player_1.health}\n" + f"Level: {Player_1.level}")
+        elif PlayerDecision == '2':
+            damage = Player_1.attack(Player_2)
+            print(f"{Player_1} attacking! Deal {damage}")
+        elif PlayerDecision == '3':
+            health = Player_1.heal()
+        elif PlayerDecision == '4':
+            print("What a LOOOOOOOSER!")
+            break
+            
