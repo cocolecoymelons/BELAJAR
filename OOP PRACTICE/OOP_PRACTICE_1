@@ -2,19 +2,25 @@ import random
 class Player:
     def __init__(self,name):
         self.name = name
-        self.health = 1
+        self.health = 100
         self.level = 1
         self.heal_cd_value = 0
+        self.heal_cd_status = False
+
     def __str__(self):
         return self.name
-    
-    def attack(self,target):
+
+    def attack(self):
         damage = random.randint(1,10)
-        target.health -= damage
         return damage
 
     def heal_cooldown(self):
-        pass
+        if self.heal_cd_value > 0:
+            self.heal_cd_status = True
+            return False
+        else:
+            self.heal_cd_status = False
+            return True
 
     def heal_cap(self):
         if self.health >= 100:
@@ -29,50 +35,81 @@ class Player:
         
     def heal_validation(self):
         heal_cap_result = self.heal_cap()
-        if heal_cap_result is None:
-            #print("Error Negative health validation.")
-            return None
-        elif not heal_cap_result:
-            #print("Heal validation 1")
-            return False
+        heal_cooldown_result = self.heal_cooldown()
+        if heal_cooldown_result:
+            if heal_cap_result is None:
+                #print("Error Negative health validation.")
+                return None
+            elif not heal_cap_result:
+                #print("Heal validation 1")
+                return False
+            else:
+                #print("Heal validation 2")
+                return True
         else:
-            #print("Heal validation 2")
-            return True
+            return False
 
         
     def heal(self):
         heal_validation_result = self.heal_validation()
+
         if heal_validation_result:
             if self.health + 10 > 100:
                 self.health = 100
+                self.heal_cd_value = 3
                 #print("Heal 1")
                 
             else:
                 self.health += 10
+                self.heal_cd_value = 3
                 #print("Heal 2")
-                print(f"{Player_1} restores 10 healths")
+                print(f"{self.name} restores 10 healths")
             return self.health
+        
         elif heal_validation_result == None:
             print("Error Negative health execution")
+        elif self.heal_cd_status:
+            print("Heal skill is on Cooldown!")
         else:
             print("Your health is full!")
         return self.health
     
-    def take_damage(self):
-        pass
+    def take_damage(self,damage):
+        self.health -= damage
+        return self.health
     def show_status(self):
-        pass
-    def level_up(self):
-        pass
+        print(f"""
+        Name: {self.name}
+        Health: {self.health}
+        Level: {self.level}
+        Heal Cooldown : {self.heal_cd_value}
+        """)
 
-#Player_1 = Player(input("P1 NAME "))
-#Player_2 = Player(input("P2 NAME "))
-Player_1 = Player("P1")
-Player_2 = Player("P2")
+    def remaining_universal_cooldown(self):
+        if self.heal_cd_value > 0:
+            self.heal_cd_value -= 1
+
+    def is_dead(self):
+        if self.health <= 0:
+            self.health = 0
+            return True
+        return False
+
+Player_1 = Player(input("P1 NAME "))
+Player_2 = Player(input("P2 NAME "))
+#Player_1 = Player("P1")
+#Player_2 = Player("P2")
+
+PlayerTurn = random.choice(['player1','player2'])
 
 while True:
-    PlayerTurn = random.choice(['player1','player2'])
+
+    if Player_1.is_dead():
+        print("P2 WINS!")
+        break
+
     if PlayerTurn == 'player1':
+        print("Your turn P1!")
         PlayerDecision = input("""
             Menu:
             1.Show Status
@@ -81,13 +118,46 @@ while True:
             4.Exit
         """)
         if PlayerDecision == '1':
-            print(f"Name: {Player_1}\n" + f"Health: {Player_1.health}\n" + f"Level: {Player_1.level}")
+            Player_1.show_status()
+            #print(f"Name: {Player_1}\n" + f"Health: {Player_1.health}\n" + f"Level: {Player_1.level}")
         elif PlayerDecision == '2':
-            damage = Player_1.attack(Player_2)
-            print(f"{Player_1} attacking! Deal {damage}")
+            damage = Player_1.attack()
+            Player_2.take_damage(damage)
+            Player_1.remaining_universal_cooldown()
+            print(f"{Player_1} attacking! Deal {damage}. {Player_2.name} health: {Player_2.health}")
+            PlayerTurn = 'player2'
         elif PlayerDecision == '3':
             health = Player_1.heal()
+            PlayerTurn = 'player2'
         elif PlayerDecision == '4':
             print("What a LOOOOOOOSER!")
             break
-            
+
+    elif PlayerTurn == 'player2':
+
+        if Player_2.is_dead():
+            print("P1 WINS")
+            break
+        print("Your turn P2!")
+        PlayerDecision = input("""
+            Menu:
+            1.Show Status
+            2.Attack
+            3.Heal
+            4.Exit
+        """)
+        if PlayerDecision == '1':
+            Player_2.show_status()
+            #print(f"Name: {Player_1}\n" + f"Health: {Player_1.health}\n" + f"Level: {Player_1.level}")
+        elif PlayerDecision == '2':
+            damage = Player_2.attack()
+            Player_1.take_damage(damage)
+            Player_2.remaining_universal_cooldown()
+            print(f"{Player_2} attacking! Deal {damage}. {Player_1.name} health: {Player_1.health}")
+            PlayerTurn = 'player1'
+        elif PlayerDecision == '3':
+            health = Player_2.heal()
+            PlayerTurn = 'player1'
+        elif PlayerDecision == '4':
+            print("What a LOOOOOOOSER!")
+            break
