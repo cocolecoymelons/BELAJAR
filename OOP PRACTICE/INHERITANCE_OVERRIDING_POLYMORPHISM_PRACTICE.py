@@ -109,9 +109,9 @@ class Manager(Employees):
         print(f"Have a meeting with {self.team_size} team.")
 
 Com = Company()
-Dev = Developer("Bahlil",30,3500,"Developer",'C++')
-Des = Designer("Jokowi",26,3000,"Designer","Adobe Photoshop")
-Man = Manager("Prabowo",45,4000,"Manager",'Too Large')
+Dev = Developer("Alice",30,3500,"Developer",'C++')
+Des = Designer("David",26,3000,"Designer","Adobe Photoshop")
+Man = Manager("Perry",45,4000,"Manager",'Too Large')
 employees_available = [
     Dev,
     Des,
