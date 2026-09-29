@@ -1,4 +1,4 @@
-from dataclasses import dataclass,field
+from dataclasses import dataclass,field,asdict
 
 from dataclass2_customer_class import ProductData
 from customers_data_converter import convert_data_into_dict,convert_data_into_dataclass
@@ -6,7 +6,7 @@ from load_and_save_file import save_file,load_file
 
 temporary_customers_data_container = load_file('customers_data_file')
 
-temporary_container_for_saving_data = {}
+print(temporary_customers_data_container)
 
 while True:
     
@@ -20,112 +20,154 @@ while True:
     """)
     
     if decision == "1":
+        try:
+            customer_name = input("Insert customer name: ")
+            
+            product_name,product_quantity,product_price, *rest = input("Insert product name,the quantity,the price and the detail(optional). (write with a comma ex: Keyboard,3,1000,Type-1)" ).strip().split(",")
+            
+            customer_order = ProductData(name=product_name,quantity=int(product_quantity),price=float(product_price),detail=rest[0] if rest else 'No detail')
+            
+            temporary_customers_data_container[customer_name] = asdict(customer_order)
+            
+            
+            save_file(temporary_customers_data_container,'customers_data_file')
+            
+        except ValueError:
+            
+            print("Must insert at least 3 data and insert a number for the quantity and the price.")
+            continue
         
-        customer_name = input("Insert customer name: ")
-        
-        product_name,product_quantity,product_price, *rest = input("Insert product name,the quantity,the price and the detail(optzional). (write with a comma ex: Keyboard,3,1000,Type-1)" ).strip().split(",")
-        
-        temporary_customers_data_container[customer_name] = {
-            'name':product_name,
-            'quantity':int(product_quantity),
-            'price':float(product_price),
-            'detail': rest[0] if rest else 'No detail'
-        }
-        
-        save_file(temporary_customers_data_container,'customers_data_file')
         print(temporary_customers_data_container)
      
     elif decision =='2':
         
         choose_customer = input("Choose customer name: ")
-        
-        for customer_name,order_detail in temporary_customers_data_container.items():
+        try:
+            for customer_name,order_detail in temporary_customers_data_container.items():
+                
+                if customer_name == choose_customer:
+                    edit_decision =  input("""
+                    What do you want to edit:
+                    1.Product
+                    2.Quantity
+                    3.Price
+                    4.Detail
+                    0.Exit
+                    """)
+                    
+                    if edit_decision == '1':
+                        edited_product_variable = input("Insert the product name(0 for cancel): ")
+                        
+                        if edited_product_variable == '0':
+                            break
+                        
+                        
+                        
+                        customer_data = ProductData(
+                            name=edited_product_variable,
+                            quantity=order_detail['quantity'],
+                            price=order_detail['price'],
+                            detail=order_detail['detail']
+                        )
+                        
+                        temporary_customers_data_container[choose_customer] = asdict(customer_data)
             
-            if customer_name == choose_customer:
-                edit_decision = input("""
-                What do you want to edit:
-                1.Product
-                2.Quantity
-                3.Price
-                4.Detail
-                0.Exit
-                """)
-                
-                if edit_decision == '1':
-                    edited_product_variable = input("Insert the product name(0 for cancel): ")
+                        save_file(temporary_customers_data_container,'customers_data_file')
+                        
+                        print(temporary_customers_data_container)
+                        
+                    elif edit_decision == '2':
+                        
+                        edited_quantity_variable = input("Insert the quantity(0 for cancel): ")
+                        
+                        if edited_quantity_variable == '0':
+                            
+                            break
+                        
+                        customer_data = ProductData(
+                            name=order_detail['name'],
+                            quantity=int(edited_quantity_variable),
+                            price=order_detail['price'],
+                            detail=order_detail['detail']
+                        )
+                        
+                        temporary_customers_data_container[choose_customer] = asdict(customer_data)
+            
+                        save_file(temporary_customers_data_container,'customers_data_file')
+                        
+                        print(temporary_customers_data_container)
+                        
+                    elif edit_decision == '3':
+                        
+                        edited_price_variable = input("Insert the product price(0 for cancel): ")
+                        
+                        if edited_price_variable == '0':
+                            
+                              break
+                        
+                        customer_data = ProductData(
+                            name=order_detail['name'],
+                            quantity=order_detail['quantity'],
+                            price=float(edited_price_variable),
+                            detail=order_detail['detail']
+                        )
                     
-                    if edited_product_variable == '0':
-                        break
+                        temporary_customers_data_container[choose_customer] = asdict(customer_data)
+            
+                        save_file(temporary_customers_data_container,'customers_data_file')
                     
-                    customer_name = {
-                        'name':edited_product_variable,
-                        'quantity':order_detail['quantity'],
-                        'price':order_detail['price'],
-                        'detail': order_detail['detail']
-                    }
+                    elif edit_decision == '4':
+                        
+                        edited_detail_variable = input("Insert the product detail(0 for cancel): ")
+                        
+                        if edited_detail_variable == '0':
+                            
+                            break
+                        
+                        customer_data = ProductData(
+                            name=order_detail['name'],
+                            quantity=order_detail['quantity'],
+                            price=order_detail['price'],
+                            detail=edited_detail_variable
+                        )
                     
-                    print(temporary_customers_data_container)
+                        temporary_customers_data_container[choose_customer] = asdict(customer_data)
+            
+                        save_file(temporary_customers_data_container,'customers_data_file')
                     
-                elif edit_decision == '2':
-                    
-                    edited_quantity_variable = input("Insert the quantity(0 for cancel): ")
-                    
-                    if edited_quantity_variable == '0':
+                    elif edit_decision == '0':
                         
                         break
                     
-                    customer_name = {
-                        'name':order_detail['name'],
-                        'quantity':int(edited_quantity_variable),
-                        'price':order_detail['price'],
-                        'detail': order_detail['detail']
-                    }
-                    
-                    print(temporary_customers_data_container)
-                    
-                elif edit_decision == '3':
-                    
-                    edited_price_variable = input("Insert the product price(0 for cancel): ")
-                    
-                    if edited_price_variable == '0':
+                    else:
+                        print("Invalid menu.")
                         
-                        break
-                    
-                    customer_name = {
-                        'name':order_detail['name'],
-                        'quantity':order_detail['quantity'],
-                        'price':int(edited_price_variable),
-                        'detail': order_detail['detail']
-                    }
-                
-                elif edit_decision == '4':
-                    
-                    edited_detail_variable = input("Insert the product price(0 for cancel): ")
-                    
-                    if edited_detail_variable == '0':
-                        
-                        break
-                    
-                    customer_name = {
-                        'name':order_detail['name'],
-                        'quantity':order_detail['quantity'],
-                        'price':edited_price_variable,
-                        'detail': edited_detail_variable
-                    }
-                
-                elif edit_decision == '0':
-                    
                     break
                 
-                else:
-                    print("Invalid menu.")
-                    
-                break
+            else:
+                print(f"There is no customer name: {choose_customer}.")
             
-        else:
-            print(f"There is no customer name: {choose_customer}.")
             
-        save_file(temporary_customers_data_container,'customers_data_file')
+            print(temporary_customers_data_container)
+         
+        except ValueError:
+            
+            print("Please input a number.")
+            continue
+            
+        except TypeError:
+            
+            print("Invalid input type. Please check the fields and try again.")
+            continue
+        
+        except NameError:
+            
+            print("Attempted to access an uninitialized identifier.")
+            continue
+            
+        except KeyError:
+            
+            print("The requested information could not be found.")
     
     elif decision == '3':
         
@@ -135,7 +177,7 @@ while True:
         
         if not removed:
             
-            print(f"There is no name {choose_name}")
+            print(f"There is no customer name:  {choose_name}")
             continue
         
         print("Success.")
