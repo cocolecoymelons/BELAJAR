@@ -6,6 +6,7 @@ from load_and_save_file import save_file,load_file
 
 from add_customer_file import add_customer
 from edit_customer_file import edit_customer_order
+from csv_customer_order import save_customer_order_data_in_csv
 
 temporary_customers_data_container = load_file('customers_data_file')
 
@@ -18,7 +19,8 @@ while True:
     2.Edit Customer Order
     3.Delete Customer Order
     4.Show Customers Orders
-    5.Exit
+    5.Save data as a Excel file
+    6.Exit
     
     """)
     
@@ -98,6 +100,10 @@ while True:
             print("Oopss, there's something wrong with the customer order data, please check for the details. ")
     
     elif decision == '5':
+        
+        save_customer_order_data_in_csv("Customer orders.csv",temporary_customers_data_container)
+    
+    elif decision == '6':
         break
     
     else:
