@@ -7,6 +7,7 @@ from load_and_save_file import save_file,load_file
 from add_customer_file import add_customer
 from edit_customer_file import edit_customer_order
 from csv_customer_order import save_customer_order_data_in_csv
+from customer_sql_execution_file import save_customer_orders_in_db,update_customer_order
 
 temporary_customers_data_container = load_file('customers_data_file')
 
@@ -20,8 +21,9 @@ while True:
     3.Delete Customer Order
     4.Show Customers Orders
     5.Save data as a Excel file
-    6.Exit
-    
+    6.Save data as SQL Database (Warning, once execution,another attempt is not provided.)
+    7.Update customer order in SQl Database
+    8.Exit
     """)
     
     if decision == "1":
@@ -104,6 +106,36 @@ while True:
         save_customer_order_data_in_csv("Customer orders.csv",temporary_customers_data_container)
     
     elif decision == '6':
+        
+        for customer_name,the_order in temporary_customers_data_container.items():
+        
+            save_customer_orders_in_db(customer_name,the_order["name"],the_order["quantity"],the_order["price"],the_order["detail"])
+        print("Success.")
+    
+    elif decision == '7':
+        
+        try:
+            row_number = input("Insert the row number:")
+            data = [data for data in input("Insert customer_name,product name,the quantity,the price and the detail(optional). (write with a comma ex: Keyboard,3,1000,Type-1)").split((","),4)]
+            
+            customer_name,product_name,quantity,product_price,product_detail = data
+            
+            quantity_int = int(quantity)
+            price_int = float(product_price)
+            
+            update_customer_order(row_number,customer_name,product_name,quantity,product_price,product_detail)
+            
+        except ValueError:
+            
+            print("Error input, please make sure the data filled is count 5 and integer numbers for the quantity and the price.")
+            
+        else:
+            if update_customer_order:
+                print("Success updating.")
+            else:
+                print("Row number is not found.")
+    elif decision == '8':
+        
         break
     
     else:
