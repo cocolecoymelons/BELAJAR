@@ -12,15 +12,28 @@ db_cursor.execute("""
             customer_name TEXT NOT NULL,
             product_name TEXT NOT NULL,
             quantity INTEGER NOT NULL CHECK(quantity > 0),
-            product_price Per Unit REAL NOT NULL CHECK(Product Price Per Unit > 0),
+            product_price REAL NOT NULL CHECK(  product_price > 0),
             product_detail TEXT NOT NULL,
-            total_price REAL NOT NULL CHECK(Total Price > 0)
+            total_price REAL GENERATED ALWAYS AS (quantity * product_price) STORED
         )
     
     """);
 
-def add_customer_order_in_sql(cname,pname,pprice,pdetail,total):
+def save_customer_orders_in_db(cname,pname,quanty,pprice,pdetail):
     
-    db_cursor.execute("INSERT INTO customer_order_data (Customer Name,Product Name,Product Price Per Unit,Product Detail,Total Price) VALUES (?,? ?,?,?)", (cname,pname,pprice,pdetail,total)
+    db_cursor.execute("INSERT INTO customer_order_data (customer_name,product_name,quantity,product_price,product_detail) VALUES (?,?,?,?,?)", (cname,pname,quanty,pprice,pdetail)
     )
     connect_db.commit()
+    
+def update_customer_order(no,cname,pname,quanty,pprice,pdetail):
+    
+    db_cursor.execute("""
+        UPDATE customer_order_data
+        SET customer_name = ?, product_name = ?, quantity = ?, product_price = ?, product_detail = ?
+        WHERE no = ?
+    """,(cname,pname,quanty,pprice,pdetail)
+    )
+    
+    connect_db.commit()
+    
+    return db_cursor.rowcount > 0
