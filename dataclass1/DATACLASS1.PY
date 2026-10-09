@@ -123,17 +123,18 @@ while True:
             quantity_int = int(quantity)
             price_int = float(product_price)
             
-            update_customer_order(row_number,customer_name,product_name,quantity,product_price,product_detail)
+            update_customer_order(customer_name,product_name,quantity,product_price,product_detail,row_number)
             
         except ValueError:
             
-            print("Error input, please make sure the data filled is count 5 and integer numbers for the quantity and the price.")
+            print("Error input, please make sure the data filled is count 5 and numbers for the quantity and the price.")
             
         else:
-            if update_customer_order:
+            if update_customer_order(customer_name,product_name,quantity,product_price,product_detail,row_number):
                 print("Success updating.")
             else:
                 print("Row number is not found.")
+                
     elif decision == '8':
         
         break
