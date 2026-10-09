@@ -25,13 +25,13 @@ def save_customer_orders_in_db(cname,pname,quanty,pprice,pdetail):
     )
     connect_db.commit()
     
-def update_customer_order(no,cname,pname,quanty,pprice,pdetail):
+def update_customer_order(cname,pname,quanty,pprice,pdetail,no):
     
     db_cursor.execute("""
         UPDATE customer_order_data
         SET customer_name = ?, product_name = ?, quantity = ?, product_price = ?, product_detail = ?
         WHERE no = ?
-    """,(cname,pname,quanty,pprice,pdetail)
+    """,(cname,pname,quanty,pprice,pdetail,no)
     )
     
     connect_db.commit()
