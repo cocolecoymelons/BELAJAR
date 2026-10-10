@@ -25,8 +25,36 @@ def save_customer_orders_in_db(cname,pname,quanty,pprice,pdetail):
     )
     connect_db.commit()
     
-def update_customer_order(cname,pname,quanty,pprice,pdetail,no):
+def update_customer_order(cname=None,pname=None,quanty=None,pprice=None,pdetail=None,no=None):
     
+    if not no:
+        print("Number of the customer order can't be empty")
+    
+    sql_command = "UPDATE customer_order_data SET "
+    
+    valid_column =[]
+    
+    the_data_to_be_committed = []
+    
+    if cname:
+        valid_column.append("customer_name = ?")
+    
+    if pname:
+        valid_column.append("product_name = ?")
+    
+    if quanty:
+        valid_column.append("quantity = ?")
+        
+    if pprice:
+        valid_column.append("product_price = ?")
+        
+    if pdetail:
+        valid_column.append("product_detail = ?")
+    
+    complete_valid_column = ",".join(valid_column)
+        
+    sql_command += complete_valid_column
+    sql_command += " WHERE no = ?"
     db_cursor.execute("""
         UPDATE customer_order_data
         SET customer_name = ?, product_name = ?, quantity = ?, product_price = ?, product_detail = ?
