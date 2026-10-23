@@ -1,6 +1,6 @@
 import sqlite3
 
-from sql_run_code import show_players,edit_player_profile
+from sql_run_code import show_players,edhit_player_profile
 
 program_run = True
 
