@@ -1,7 +1,7 @@
 import sqlite3
 
-from sql_run_code import show_players,edhit_player_profile
-
+from sql_run_code import export_player_data_from_db,show_players,edit_player_profile_on_sql
+from edit_player_profile_file import edit_player_profile
 program_run = True
 
 while program_run:
@@ -20,9 +20,7 @@ while program_run:
     
     elif admin_decision == '2':
         
-        player_username = input("Insert player username: ").strip()
-        
-        edit_player_profile(player_username)
+        edit_player_profile()
         
     elif admin_decision == '4':
         
