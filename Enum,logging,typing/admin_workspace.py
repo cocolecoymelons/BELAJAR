@@ -1,6 +1,7 @@
 import sqlite3
 
-from sql_run_code import export_player_data_from_db,show_players,edit_player_profile_on_sql
+from sql_run_code import show_players
+
 from edit_player_profile_file import edit_player_profile
 program_run = True
 
