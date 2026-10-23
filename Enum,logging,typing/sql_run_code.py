@@ -59,68 +59,14 @@ def show_players():
     #for r in rows:
         #print(" | ".join(str(v).ljust(w) for v, w in zip(r, widths)))
     
-def edit_player_profile(player_username):
-    
-    edit_run = True
-    
+def edit_player_profile_on_sql(new_player_id,new_player_username,player_status,player_username):
+            
     db_cursor.execute("""
-    SELECT * FROM players_data_table
-    WHERE player_username = ?
-    ;
-    """,(player_username,))
-
-    player_data = db_cursor.fetchone()
+    UPDATE players_data_table
+    SET player_id = ?,
+    player_username = ?,
+    player_status = ?
+    WHERE player_username = ?;
+    """,(new_player_id,new_player_username,player_status,player_username))
     
-    if player_data is None:
-        
-        print("Player not found!")
-        
-        return
-    
-    while edit_run:
-        
-        new_player_id = input("Insert new player number id(insert blank for skip): ")
-        
-        if new_player_id.strip() == '':
-            
-            new_player_id = player_data[0]
-        
-        new_player_username = input("Insert new player username(insert blank for skip): ")
-       
-        if new_player_username.strip() == '':
-            
-            new_player_username = player_data[1]
-       
-        player_status = input("Insert new player account status(1.Online 2.Locked 3.Banned #insert the number desired,blank to skip): ")
-       
-        if player_status.strip() == '1':
-            
-            player_status = PlayerStatus.ONLINE.value
-        
-        elif player_status.strip() == '2':
-            
-            player_status = PlayerStatus.LOCKED.value
-            
-        elif player_status.strip() == '3':
-            
-            player_status = PlayerStatus.BANNED.value
-        
-        elif player_status.strip() == '':
-            
-            player_status = player_data[3]
-            
-        else:
-            
-            print("Unknown command!")
-            
-        db_cursor.execute("""
-        UPDATE players_data_table
-        SET player_id = ?,
-        player_username = ?,
-        player_status = ?
-        WHERE player_username = ?;
-        """,(new_player_id,new_player_username,player_status,player_username))
-        
-        connect_player_db.commit()
-        
-        edit_run = False
+    connect_player_db.commit()
