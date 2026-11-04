@@ -30,14 +30,6 @@ def edit_player_profile():
   
     while edit_run:
     
-        new_player_id = input("Insert new player number id(insert blank for skip): ")
-        
-        if new_player_id.strip() == '':
-            
-            new_player_id = player_data[0]
-      
-            admin_edit_logger.debug(f"Admin bypassed the player id editing section for [{player_username}].")
-
         new_player_username = input("Insert new player username(insert blank for skip): ")
        
         if new_player_username.strip() == '':
@@ -82,10 +74,10 @@ def edit_player_profile():
             
         edit_run = False
             
-    edit_player_profile_on_sql(new_player_id,new_player_username,player_status,player_username)
+    edit_player_profile_on_sql(new_player_username,player_status,player_username)
 
-    admin_edit_logger.debug("""
+    admin_edit_logger.debug(f"""
     The editing section is done,
-    resulting the player named [{}] profile as
-    {new_player_id},{new_player_username},{player_status}.
+    resulting the player named [{player_username}] profile as
+    {new_player_username},{player_status}.
     """)

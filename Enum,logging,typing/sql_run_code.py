@@ -1,6 +1,10 @@
 import sqlite3
 
+import logging
+
 from player_enum import PlayerStatus
+
+sql_logging = logging.getLogger("SQL run code")
 
 connect_player_db = sqlite3.connect("player_database.db")
 
@@ -59,14 +63,13 @@ def show_players():
     #for r in rows:
         #print(" | ".join(str(v).ljust(w) for v, w in zip(r, widths)))
     
-def edit_player_profile_on_sql(new_player_id,new_player_username,player_status,player_username):
+def edit_player_profile_on_sql(new_player_username,player_status,player_username):
             
     db_cursor.execute("""
     UPDATE players_data_table
-    SET player_id = ?,
-    player_username = ?,
+    SET player_username = ?,
     player_status = ?
     WHERE player_username = ?;
-    """,(new_player_id,new_player_username,player_status,player_username))
+    """,(new_player_username,player_status,player_username))
     
     connect_player_db.commit()

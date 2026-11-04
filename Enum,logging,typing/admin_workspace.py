@@ -13,6 +13,9 @@ admin_logger = logging.getLogger("Admin Workspace")
 admin_logger.info("Admin run the workspace...")
 
 while program_run:
+
+  try:
+    
     admin_decision = input("""
     
     1.Show players
@@ -40,4 +43,23 @@ while program_run:
     else:
 
       print("Unknown menu!")
-      admin.info("Admin inserting an unknown command.")
+      admin_logger.info("Admin inserting an unknown command.")
+
+  except sqlite3.OperationalError:
+
+    print("Operational Error: Database table is not found or is locked.")
+
+    admin_logger.info("Database SQL system catch an Operational Error.")
+
+  except sqlite3.IntegrityError:
+
+    print("Integrity Error: Insert a similar data is probihited.")
+
+    admin_logger.info("Database SQL system catch an Integrity Error.")
+
+  except IndexError:
+
+    print("Index Error: Unknown index accessing.")
+
+    admin_logger.info("Database SQL system catch an Index Error.")
+  
